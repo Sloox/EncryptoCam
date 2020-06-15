@@ -1,0 +1,2 @@
+rootProject.name='Safely Camera'
+include ':app'
