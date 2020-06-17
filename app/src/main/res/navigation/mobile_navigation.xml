@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_login">
+
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="com.example.encryptocam.screens.login.LoginFragment"
+        android:label="@string/nav_login_label"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_nav_login_to_nav_camera"
+            app:destination="@id/nav_camera"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_camera"
+        android:name="com.example.encryptocam.screens.camera.CameraFragment"
+        android:label="@string/nav_camera_label"
+        tools:layout="@layout/fragment_camera">
+        <action
+            android:id="@+id/action_nav_camera_to_nav_gallery"
+            app:destination="@id/nav_gallery" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.example.encryptocam.screens.gallery.GalleryFragment"
+        android:label="@string/nav_gallery_label"
+        tools:layout="@layout/fragment_gallery">
+        <action
+            android:id="@+id/action_nav_gallery_to_nav_camera"
+            app:destination="@id/nav_camera" />
+    </fragment>
+
+</navigation>

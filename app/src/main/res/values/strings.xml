@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Safely Camera</string>
+    <string name="nav_login_label">Login</string>
+    <string name="nav_camera_label">Camera</string>
+    <string name="nav_gallery_label">Gallery</string>
 </resources>
