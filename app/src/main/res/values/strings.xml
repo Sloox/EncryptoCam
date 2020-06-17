@@ -3,4 +3,11 @@
     <string name="nav_login_label">Login</string>
     <string name="nav_camera_label">Camera</string>
     <string name="nav_gallery_label">Gallery</string>
+    <string name="button_login">Login</string>
+    <string name="error_login_invalid_password">Invalid Password provided</string>
+    <string name="error_login_too_short_password">Password must be greater than 5 characters long</string>
+    <string name="error_login_no_password_provided">No password provided</string>
+    <string name="launcher_never_ask_again">Please grant the permissions in order to use the application.</string>
+    <string name="general_ok">OK</string>
+    <string name="launcher_permissions_denied">All permissions must be granted to continue.</string>
 </resources>

@@ -12,8 +12,7 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_nav_login_to_nav_camera"
-            app:destination="@id/nav_camera"
-            app:launchSingleTop="true" />
+            app:destination="@id/nav_camera" />
     </fragment>
 
     <fragment

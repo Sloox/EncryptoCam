@@ -58,6 +58,8 @@ ext {
     camerax_core = '1.0.0-alpha08'
     camerax_view = '1.0.0-alpha05'
 
+    glide = '4.11.0'
+
     //Permissions
     permissions = '4.6.0'
 
