@@ -46,8 +46,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_android"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
-    //Dialogs
-    implementation "com.afollestad.material-dialogs:core:$material_dialog_core"
     //ui
     implementation "com.google.android.material:material:$material"
     //androidx
@@ -57,9 +55,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$androidx_library"
     implementation "androidx.annotation:annotation:$androidx_library"
     implementation "android.arch.lifecycle:extensions:$androidx_library_lifecycle_extensions"
-    implementation "androidx.preference:preference:$androidx_preference"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_viewmodel"
-
     //Navigation
     implementation "androidx.navigation:navigation-fragment:$androidx_navigation"
     implementation "androidx.navigation:navigation-ui:$androidx_navigation"
@@ -71,10 +67,16 @@ dependencies {
     implementation "org.koin:koin-android-ext:$koin"
     implementation "org.koin:koin-androidx-viewmodel:$koin"
     implementation "org.koin:koin-androidx-fragment:$koin"
-    implementation "org.koin:koin-androidx-ext:$koin"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide"
+
+    //CameraX
+    implementation "androidx.camera:camera-core:$camerax_version"
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    // CameraX View class
+    implementation "androidx.camera:camera-view:$camerax_view"
 
     //Permissions
     implementation "org.permissionsdispatcher:permissionsdispatcher:$permissions"

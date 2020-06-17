@@ -13,20 +13,20 @@ class LoginViewModel : BaseFragmentViewModel() {
     private val _loginState = MutableLiveData(LoginStateEnum.DEFAULT)
     val loginStateEnum: LiveData<LoginStateEnum> = _loginState
 
-    fun attemptLogin(loginPassword: String) {
+    fun attemptLogin(loginPassword: String?) {
         //TODO Abstract this further?
         if (!checkLoginTextIntegrity(loginPassword)) return
 
-        if (Arrays.equals(Base64.decode(NOT_A_PASSWORD, 0), loginPassword.toByteArray())) {
+        if (Arrays.equals(Base64.decode(NOT_A_PASSWORD, 0), loginPassword!!.toByteArray())) {
             navigate(NavCommand.CameraFragment)
         } else {
             _loginState.postValue(LoginStateEnum.ERROR_INVALID_PASS)
         }
     }
 
-    fun checkLoginTextIntegrity(loginPassword: String): Boolean {
+    fun checkLoginTextIntegrity(loginPassword: String?): Boolean {
         return when {
-            loginPassword.isEmpty() -> {
+            loginPassword.isNullOrEmpty() -> {
                 _loginState.postValue(LoginStateEnum.ERROR_NO_PASSWORD)
                 false
             }
@@ -43,7 +43,7 @@ class LoginViewModel : BaseFragmentViewModel() {
     }
 
     companion object {
-        private const val NOT_A_PASSWORD = "bXlzYWZlcGFzc3dvcmQ="
+        private const val NOT_A_PASSWORD = "bXlzYWZlcGFzc3dvcmQ=" //mysafepassword
     }
 
 }

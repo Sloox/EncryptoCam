@@ -55,13 +55,14 @@ ext {
 
     //barcode vision
     play_services_vision = '19.0.0'
-    camerax_core = '1.0.0-alpha08'
-    camerax_view = '1.0.0-alpha05'
-
+    //glide
     glide = '4.11.0'
-
     //Permissions
     permissions = '4.6.0'
+
+    //CameraX
+    camerax_version = '1.0.0-beta04'
+    camerax_view = '1.0.0-alpha11'
 
     //Tests
     junit = '4.12'

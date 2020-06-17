@@ -11,7 +11,7 @@
     <dimen name="dp_margin_large">20dp</dimen>
     <dimen name="dp_margin_small">10dp</dimen>
     <dimen name="dp_margin_extra_small">5dp</dimen>
-    <dimen name="dp_margin_extra_large">40dp</dimen>
+    <dimen name="dp_margin_extra_large">42dp</dimen>
     <dimen name="adapter_item_device_name_text_size">16sp</dimen>
 
     <dimen name="base_padding_large">16dp</dimen>
@@ -23,4 +23,8 @@
     <dimen name="min_row_height">48dp</dimen>
     <dimen name="min_row_height_small">36dp</dimen>
     <dimen name="dp_text_login_min_width">256dp</dimen>
+
+    <dimen name="top_action_bar_height">64dp</dimen>
+    <dimen name="top_action_bar_padding_horizontal">8dp</dimen>
+    <dimen name="top_action_button_padding">12dp</dimen>
 </resources>

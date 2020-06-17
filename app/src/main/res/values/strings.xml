@@ -10,4 +10,8 @@
     <string name="launcher_never_ask_again">Please grant the permissions in order to use the application.</string>
     <string name="general_ok">OK</string>
     <string name="launcher_permissions_denied">All permissions must be granted to continue.</string>
+    <string name="cd_close_button">Back</string>
+    <string name="cd_settings_button">Settings</string>
+    <string name="cd_flash_button">Flash toggle</string>
+    <string name="login_title">Enter password to continue</string>
 </resources>
