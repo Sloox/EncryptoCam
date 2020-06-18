@@ -6,8 +6,6 @@
 
         <import type="android.view.View" />
 
-        <import type="com.example.encryptocam.navigation.NavCommand" />
-
         <variable
             name="viewModel"
             type="com.example.encryptocam.screens.camera.CameraViewModel" />

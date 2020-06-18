@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.encryptocam.commons.base.viewmodel.BaseFragmentViewModel
 import com.example.encryptocam.navigation.NavCommand
+import java.io.ByteArrayOutputStream
 
 class CameraViewModel : BaseFragmentViewModel() {
 
@@ -16,9 +17,20 @@ class CameraViewModel : BaseFragmentViewModel() {
     private val _aemEnabled = MutableLiveData<Boolean>(false)
     val aemEnabled: LiveData<Boolean> = _aemEnabled
 
+    private val _camCommandState: MutableLiveData<CamPictureCommands> = MutableLiveData(CamPictureCommands.DEFAULT)
+    val camCommandState: LiveData<CamPictureCommands> = _camCommandState
+
 
     fun navigateBack() {
         navigate(NavCommand.LoginFragment)
+    }
+
+    fun navigateToGallery() {
+        navigate(NavCommand.GalleryFragment)
+    }
+
+    fun takePicture() {
+        _camCommandState.postValue(CamPictureCommands.TAKEPICTURE)
     }
 
     fun toggleFlash() {
@@ -31,5 +43,15 @@ class CameraViewModel : BaseFragmentViewModel() {
 
     fun toggleCameraFacing() {
         _frontFacingCameraSelection.postValue(_frontFacingCameraSelection.value?.not() ?: false)
+    }
+
+    suspend fun encryptAndSaveImage(bufferedOutputStream: ByteArrayOutputStream) {
+        _camCommandState.postValue(CamPictureCommands.DEFAULT)
+
+
+    }
+
+    fun clearCameraState() {
+        _camCommandState.postValue(CamPictureCommands.DEFAULT)
     }
 }

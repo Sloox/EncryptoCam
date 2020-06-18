@@ -16,4 +16,7 @@
     <string name="login_title">Enter password to continue</string>
     <string name="cd_ae_button"><![CDATA[AutoFocusing & Metering]]></string>
     <string name="cd_facing_button">Front/Rear Facing camera</string>
+    <string name="cd_shutter_button">Shutter button</string>
+    <string name="cd_gallery_button">Gallery button</string>
+    <string name="error_camera_falied_to_take_picture">Failed to capture picture.</string>
 </resources>

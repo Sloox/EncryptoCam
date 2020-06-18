@@ -24,6 +24,13 @@
             android:layout_height="match_parent" />
 
         <include
+            layout="@layout/include_picture_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:viewModel="@{viewModel}" />
+
+        <include
             layout="@layout/include_top_action_bar_camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

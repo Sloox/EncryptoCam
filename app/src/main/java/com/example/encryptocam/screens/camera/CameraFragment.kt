@@ -3,29 +3,44 @@ package com.example.encryptocam.screens.camera
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.encryptocam.R
 import com.example.encryptocam.commons.base.fragment.BaseFragment
+import com.example.encryptocam.commons.base.fragment.roUI
+import com.example.encryptocam.commons.extensions.loge
 import com.example.encryptocam.commons.extensions.logi
 import com.example.encryptocam.databinding.FragmentCameraBinding
+import com.example.encryptocam.screens.camera.CamPictureCommands.*
 import com.example.encryptocam.utils.CameraUtils
 import kotlinx.android.synthetic.main.fragment_camera.*
+import kotlinx.android.synthetic.main.include_picture_controls.*
 import kotlinx.android.synthetic.main.include_top_action_bar_camera.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.BufferedOutputStream
+import java.io.ByteArrayOutputStream
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.layout.fragment_camera, CameraViewModel::class) {
     private lateinit var viewFinder: PreviewView
-
     private var displayId: Int = -1
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
     private var preview: Preview? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
+    private var imageCapture: ImageCapture? = null
+    private lateinit var cameraExecutor: ExecutorService
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +53,7 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         //wait for views to be laid out
         viewFinder.post {
             displayId = viewFinder.display.displayId
+            cameraExecutor = Executors.newSingleThreadExecutor()
             initCamera()
             initCameraUI()
         }
@@ -66,8 +82,15 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         // Bind the CameraProvider to the LifeCycleOwner
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         preview = Preview.Builder().setTargetAspectRatio(screenAspectRatio).setTargetRotation(rotation).build()
+        // ImageCapture
+        imageCapture = ImageCapture.Builder()
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            .setTargetAspectRatio(screenAspectRatio)
+            .setTargetRotation(rotation)
+            .build()
+
         cameraProvider?.unbindAll()
-        camera = cameraProvider?.bindToLifecycle(this, cameraSelector, preview)
+        camera = cameraProvider?.bindToLifecycle(this, cameraSelector, preview, imageCapture)
         preview?.setSurfaceProvider(viewFinder.createSurfaceProvider())
     }
 
@@ -75,8 +98,48 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         viewModel.aemEnabled.observe(viewLifecycleOwner, Observer { if (it != null) changeFocusAndMetering(it) })
         viewModel.flashStateEnabled.observe(viewLifecycleOwner, Observer { if (it != null) enableFlash(it) })
         viewModel.frontFacingCameraSelection.observe(viewLifecycleOwner, Observer { if (it != null) changeCameraFacing(it) })
+        viewModel.camCommandState.observe(viewLifecycleOwner, Observer { if (it != null) processCamCommands(it) })
     }
 
+    private fun processCamCommands(commands: CamPictureCommands) = when (commands) {
+        TAKEPICTURE -> takePicture()
+        else -> {
+        }
+    }
+
+    private fun takePicture() {
+        imageCapture?.let {
+            val bufferedOutputStream = ByteArrayOutputStream()
+            val outputOptions = ImageCapture.OutputFileOptions.Builder(bufferedOutputStream).build()
+            it.takePicture(outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    logi("Image written to buffer")
+                    GlobalScope.launch {
+                        viewModel.encryptAndSaveImage(bufferedOutputStream)
+                        setThumbNailImage(bufferedOutputStream)
+                    }
+                }
+
+                override fun onError(exception: ImageCaptureException) = roUI {
+                    loge("Failed to capture image: $exception")
+                    Toast.makeText(requireContext(), getString(R.string.error_camera_falied_to_take_picture), Toast.LENGTH_LONG).show()
+                    viewModel.clearCameraState()
+                }
+            })
+        }
+    }
+
+    private fun setThumbNailImage(picStream: ByteArrayOutputStream) = roUI {
+        val paddingSize = resources.getDimension(R.dimen.stroke_small).toInt()
+        button_gallery.setPadding(paddingSize, paddingSize, paddingSize, paddingSize)
+        Glide.with(button_gallery)
+            .load(picStream.toByteArray())
+            .apply(RequestOptions.circleCropTransform())
+            .into(button_gallery)
+    }
+
+
+    /*Camera Property helpers*/
     private fun changeCameraFacing(front: Boolean) {
         if (front) {
             if (CameraUtils.hasFrontCamera(cameraProvider)) {
@@ -105,6 +168,11 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cameraExecutor.shutdown()
+    }
+
     private fun changeFocusAndMetering(value: Boolean) {
         if (value) {
             val factory: MeteringPointFactory = SurfaceOrientedMeteringPointFactory(viewFinder.width.toFloat(), viewFinder.height.toFloat())
@@ -119,7 +187,5 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         }
     }
 
-    private fun hideSystemUI() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-    }
+    private fun hideSystemUI() = (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 }

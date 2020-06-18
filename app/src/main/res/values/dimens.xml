@@ -27,4 +27,12 @@
     <dimen name="top_action_bar_height">64dp</dimen>
     <dimen name="top_action_bar_padding_horizontal">8dp</dimen>
     <dimen name="top_action_button_padding">12dp</dimen>
+    <dimen name="dp_button_shutter">80dp</dimen>
+    <dimen name="dp_button_shutter_margin">72dp</dimen>
+    <dimen name="dp_button_gallery">60dp</dimen>
+    <dimen name="dp_button_gallery_margin">84dp</dimen>
+    <dimen name="dp_button_gallery_margin_small">32dp</dimen>
+    <dimen name="dp_button_gallery_padding">16dp</dimen>
+    <dimen name="stroke_small">4dp</dimen>
+    <dimen name="round_button_medium">64dp</dimen>
 </resources>
