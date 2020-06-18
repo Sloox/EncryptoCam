@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.Camera
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.example.encryptocam.R
 import com.example.encryptocam.commons.base.fragment.BaseFragment
 import com.example.encryptocam.commons.extensions.logi
 import com.example.encryptocam.databinding.FragmentCameraBinding
 import com.example.encryptocam.utils.CameraUtils
 import kotlinx.android.synthetic.main.fragment_camera.*
+import kotlinx.android.synthetic.main.include_top_action_bar_camera.*
+import java.util.concurrent.TimeUnit
 
 class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.layout.fragment_camera, CameraViewModel::class) {
     private lateinit var viewFinder: PreviewView
@@ -37,8 +38,8 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         //wait for views to be laid out
         viewFinder.post {
             displayId = viewFinder.display.displayId
-            updateCameraUI()
             initCamera()
+            initCameraUI()
         }
     }
 
@@ -51,8 +52,6 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
                 CameraUtils.hasFrontCamera(cameraProvider) -> CameraSelector.LENS_FACING_FRONT
                 else -> throw IllegalStateException("Back and front camera are unavailable")
             }
-            // TODO updateCameraSwitchButton(),
-
             // Build and bind the camera use cases
             bindCameraToLifeCycle()
         }, ContextCompat.getMainExecutor(requireContext()))
@@ -72,8 +71,52 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         preview?.setSurfaceProvider(viewFinder.createSurfaceProvider())
     }
 
-    private fun updateCameraUI() {
-        //TODO
+    private fun initCameraUI() {
+        viewModel.aemEnabled.observe(viewLifecycleOwner, Observer { if (it != null) changeFocusAndMetering(it) })
+        viewModel.flashStateEnabled.observe(viewLifecycleOwner, Observer { if (it != null) enableFlash(it) })
+        viewModel.frontFacingCameraSelection.observe(viewLifecycleOwner, Observer { if (it != null) changeCameraFacing(it) })
+    }
+
+    private fun changeCameraFacing(front: Boolean) {
+        if (front) {
+            if (CameraUtils.hasFrontCamera(cameraProvider)) {
+                lensFacing = CameraSelector.LENS_FACING_FRONT
+                bindCameraToLifeCycle()
+            } else {
+                //no front lens, toggle it back to the original back
+                viewModel.toggleCameraFacing()
+            }
+        } else {
+            lensFacing = CameraSelector.LENS_FACING_BACK
+            bindCameraToLifeCycle()
+        }
+    }
+
+    private fun enableFlash(value: Boolean) {
+        camera?.let {
+            if (!it.cameraInfo.hasFlashUnit()) return@let
+            if (flash_button.isSelected) {
+                flash_button.isSelected = false
+                it.cameraControl.enableTorch(false)
+            } else {
+                flash_button.isSelected = true
+                it.cameraControl.enableTorch(true)
+            }
+        }
+    }
+
+    private fun changeFocusAndMetering(value: Boolean) {
+        if (value) {
+            val factory: MeteringPointFactory = SurfaceOrientedMeteringPointFactory(viewFinder.width.toFloat(), viewFinder.height.toFloat())
+            val centerWidth = viewFinder.width.toFloat() / 2
+            val centerHeight = viewFinder.height.toFloat() / 2
+            val autoFocusPoint = factory.createPoint(centerWidth, centerHeight)
+            camera?.cameraControl?.startFocusAndMetering(FocusMeteringAction.Builder(autoFocusPoint, FocusMeteringAction.FLAG_AF).apply {
+                setAutoCancelDuration(1, TimeUnit.SECONDS)
+            }.build())
+        } else {
+            camera?.cameraControl?.cancelFocusAndMetering()
+        }
     }
 
     private fun hideSystemUI() {

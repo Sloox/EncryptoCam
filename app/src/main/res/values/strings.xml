@@ -14,4 +14,6 @@
     <string name="cd_settings_button">Settings</string>
     <string name="cd_flash_button">Flash toggle</string>
     <string name="login_title">Enter password to continue</string>
+    <string name="cd_ae_button"><![CDATA[AutoFocusing & Metering]]></string>
+    <string name="cd_facing_button">Front/Rear Facing camera</string>
 </resources>
