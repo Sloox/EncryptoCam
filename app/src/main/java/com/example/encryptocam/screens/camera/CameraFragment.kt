@@ -18,14 +18,12 @@ import com.example.encryptocam.commons.base.fragment.roUI
 import com.example.encryptocam.commons.extensions.loge
 import com.example.encryptocam.commons.extensions.logi
 import com.example.encryptocam.databinding.FragmentCameraBinding
-import com.example.encryptocam.screens.camera.CamPictureCommands.*
 import com.example.encryptocam.utils.CameraUtils
 import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.android.synthetic.main.include_picture_controls.*
 import kotlinx.android.synthetic.main.include_top_action_bar_camera.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -40,7 +38,6 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
     private var cameraProvider: ProcessCameraProvider? = null
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,9 +98,11 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         viewModel.camCommandState.observe(viewLifecycleOwner, Observer { if (it != null) processCamCommands(it) })
     }
 
-    private fun processCamCommands(commands: CamPictureCommands) = when (commands) {
-        TAKEPICTURE -> takePicture()
-        else -> {
+    private fun processCamCommands(commands: CameraState) = when (commands) {
+        is CameraState.TakePicture -> takePicture()
+        is CameraState.SetThumbnail -> setThumbNailImage(commands.thumbnail)
+        is CameraState.Default -> {
+            //left blank intentionally
         }
     }
 
@@ -129,15 +128,18 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
         }
     }
 
-    private fun setThumbNailImage(picStream: ByteArrayOutputStream) = roUI {
+    private fun setThumbNailImage(picStream: ByteArrayOutputStream) {
+        setThumbNailImage(picStream.toByteArray())
+    }
+
+    private fun setThumbNailImage(picStream: ByteArray) = roUI {
         val paddingSize = resources.getDimension(R.dimen.stroke_small).toInt()
         button_gallery.setPadding(paddingSize, paddingSize, paddingSize, paddingSize)
         Glide.with(button_gallery)
-            .load(picStream.toByteArray())
+            .load(picStream)
             .apply(RequestOptions.circleCropTransform())
             .into(button_gallery)
     }
-
 
     /*Camera Property helpers*/
     private fun changeCameraFacing(front: Boolean) {
@@ -188,4 +190,5 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
     }
 
     private fun hideSystemUI() = (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
 }

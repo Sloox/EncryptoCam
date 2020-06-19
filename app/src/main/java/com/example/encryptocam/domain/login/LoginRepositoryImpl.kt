@@ -1,18 +1,17 @@
 package com.example.encryptocam.domain.login
 
-import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import java.util.*
+import com.example.encryptocam.domain.encryption.EncryptionRepository
 
-class LoginRepositoryImpl : LoginRepository {
+class LoginRepositoryImpl(private val encryptionRepository: EncryptionRepository) : LoginRepository {
     private val _loginState: MutableLiveData<LoginStateEnum> = MutableLiveData(LoginStateEnum.DEFAULT) //default state on creation
     override val loginState: LiveData<LoginStateEnum> = _loginState
 
     override suspend fun doLogin(password: String) {
         if (!verifyPasswordIntegrity(password)) return
 
-        if (Arrays.equals(Base64.decode(NOT_A_PASSWORD, 0), password.toByteArray())) {
+        if (encryptionRepository.validateInputAgainstKey(password.toByteArray())) {
             _loginState.postValue(LoginStateEnum.PASSWORD_ACCEPTED)
         } else {
             _loginState.postValue(LoginStateEnum.ERROR_INVALID_PASS)
@@ -39,9 +38,5 @@ class LoginRepositoryImpl : LoginRepository {
 
     override suspend fun clearLoginState() {
         _loginState.postValue(LoginStateEnum.DEFAULT)
-    }
-
-    companion object {
-        private const val NOT_A_PASSWORD = "bXlzYWZlcGFzc3dvcmQ=" //mysafepassword
     }
 }
