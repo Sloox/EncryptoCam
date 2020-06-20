@@ -63,6 +63,7 @@ ext {
     //CameraX
     camerax_version = '1.0.0-beta04'
     camerax_view = '1.0.0-alpha11'
+    robo_electric = '4.3.1'
 
     //Tests
     junit = '4.12'

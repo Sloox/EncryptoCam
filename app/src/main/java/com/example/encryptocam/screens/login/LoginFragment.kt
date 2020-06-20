@@ -2,10 +2,10 @@ package com.example.encryptocam.screens.login
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.encryptocam.R
 import com.example.encryptocam.commons.base.fragment.BaseFragment
-import com.example.encryptocam.commons.extensions.loge
 import com.example.encryptocam.databinding.FragmentLoginBinding
 import com.example.encryptocam.domain.login.LoginStateEnum
 import com.example.encryptocam.navigation.NavCommand
@@ -14,6 +14,20 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layout.fragment_login, LoginViewModel::class) {
+    private fun showToolbar() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            show()
+            setHomeButtonEnabled(false)
+            setDisplayHomeAsUpEnabled(false)
+            setDefaultDisplayHomeAsUpEnabled(false)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showToolbar()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loginState.observe(viewLifecycleOwner, Observer {

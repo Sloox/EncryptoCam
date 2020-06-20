@@ -9,7 +9,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
 
-class EncryptionRepositoryImpl : EncryptionRepository {
+class EncryptionServiceImpl : EncryptionService {
     override val ENCRYPT_ALGO: String = "AES"
     private val key: SecretKey
 
@@ -33,6 +33,7 @@ class EncryptionRepositoryImpl : EncryptionRepository {
     }
 
     override fun encryptBytes(bytes: ByteArray): ByteArray {
+        if (bytes.isEmpty()) return byteArrayOf()
         val aes = Cipher.getInstance(ENCRYPT_ALGO)
         aes.init(Cipher.ENCRYPT_MODE, key)
         val outputStream = ByteArrayOutputStream(bytes.size)
@@ -44,6 +45,7 @@ class EncryptionRepositoryImpl : EncryptionRepository {
     }
 
     override fun decryptBytes(bytes: ByteArray): ByteArray {
+        if (bytes.isEmpty()) return byteArrayOf()
         val aes = Cipher.getInstance(ENCRYPT_ALGO)
         aes.init(Cipher.DECRYPT_MODE, key)
         val outputStream = ByteArrayOutputStream(bytes.size)

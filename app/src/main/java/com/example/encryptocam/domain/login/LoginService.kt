@@ -3,7 +3,7 @@ package com.example.encryptocam.domain.login
 import androidx.lifecycle.LiveData
 
 
-interface LoginRepository {
+interface LoginService {
     val loginState: LiveData<LoginStateEnum>
 
     suspend fun doLogin(password: String)

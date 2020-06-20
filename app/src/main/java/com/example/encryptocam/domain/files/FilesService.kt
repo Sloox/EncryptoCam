@@ -3,7 +3,7 @@ package com.example.encryptocam.domain.files
 import android.content.Context
 import java.io.File
 
-interface FilesRepository {
+interface FilesService {
     val ENCRYPTED_EXTENSION: String
     val FILENAME_FORMAT: String
 

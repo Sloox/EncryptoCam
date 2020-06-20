@@ -2,16 +2,16 @@ package com.example.encryptocam.domain.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.encryptocam.domain.encryption.EncryptionRepository
+import com.example.encryptocam.domain.encryption.EncryptionService
 
-class LoginRepositoryImpl(private val encryptionRepository: EncryptionRepository) : LoginRepository {
+class LoginServiceImpl(private val encryptionService: EncryptionService) : LoginService {
     private val _loginState: MutableLiveData<LoginStateEnum> = MutableLiveData(LoginStateEnum.DEFAULT) //default state on creation
     override val loginState: LiveData<LoginStateEnum> = _loginState
 
     override suspend fun doLogin(password: String) {
         if (!verifyPasswordIntegrity(password)) return
 
-        if (encryptionRepository.validateInputAgainstKey(password.toByteArray())) {
+        if (encryptionService.validateInputAgainstKey(password.toByteArray())) {
             _loginState.postValue(LoginStateEnum.PASSWORD_ACCEPTED)
         } else {
             _loginState.postValue(LoginStateEnum.ERROR_INVALID_PASS)

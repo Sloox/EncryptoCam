@@ -1,6 +1,6 @@
 package com.example.encryptocam.domain.encryption
 
-interface EncryptionRepository {
+interface EncryptionService {
     val ENCRYPT_ALGO: String
     fun getEncryptionKey(): ByteArray
     fun validateInputAgainstKey(bytes: ByteArray): Boolean

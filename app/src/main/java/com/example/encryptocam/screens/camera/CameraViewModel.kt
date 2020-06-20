@@ -4,16 +4,11 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.encryptocam.commons.base.viewmodel.BaseFragmentViewModel
-import com.example.encryptocam.domain.files.FilesRepository
+import com.example.encryptocam.domain.files.FilesService
 import com.example.encryptocam.navigation.NavCommand
-import org.koin.core.inject
 import java.io.ByteArrayOutputStream
 
-class CameraViewModel : BaseFragmentViewModel() {
-
-    private val filesRepository: FilesRepository by inject()
-    private val context: Context by inject()
-
+class CameraViewModel(private val context: Context, private val filesService: FilesService) : BaseFragmentViewModel() {
     private val _flashStateEnabled = MutableLiveData<Boolean>(false)
     val flashStateEnabled: LiveData<Boolean> = _flashStateEnabled
 
@@ -32,10 +27,10 @@ class CameraViewModel : BaseFragmentViewModel() {
     }
 
     private fun checkForGalleryPictures() {
-        val rootFolder = filesRepository.getRootDirectory(context)
-        val listFiles = filesRepository.listFiles(rootFolder)
+        val rootFolder = filesService.getRootDirectory(context)
+        val listFiles = filesService.listFiles(rootFolder)
         if (listFiles.isNotEmpty()) {
-            _camCommandState.postValue(CameraState.SetThumbnail(filesRepository.getPicture(listFiles.first())))
+            _camCommandState.postValue(CameraState.SetThumbnail(filesService.getPicture(listFiles.first())))
         }
     }
 
@@ -66,9 +61,9 @@ class CameraViewModel : BaseFragmentViewModel() {
     /**we use suspend here to ensure its run within coroutine scope*/
     suspend fun encryptAndSaveImage(bufferedOutputStream: ByteArrayOutputStream) {
         clearCameraState()
-        val root = filesRepository.getRootDirectory(context)
-        val file = filesRepository.createFileNew(root)
-        filesRepository.savePicture(file, bufferedOutputStream.toByteArray())
+        val root = filesService.getRootDirectory(context)
+        val file = filesService.createFileNew(root)
+        filesService.savePicture(file, bufferedOutputStream.toByteArray())
     }
 
     fun clearCameraState() {

@@ -11,14 +11,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.encryptocam.BR
-import com.example.encryptocam.domain.files.FilesRepository
+import com.example.encryptocam.domain.files.FilesService
 import kotlinx.android.synthetic.main.adapter_item_picture.view.*
 import java.io.File
 
-class ImageAdapter<T>(@LayoutRes val layout: Int, private val diff: DiffCallback<T>? = null, private val onClick: OnBaseAdapterClickListener<T>? = null, private val filesRepository: FilesRepository) :
+class ImageAdapter<T>(
+    @LayoutRes val layout: Int,
+    private val diff: DiffCallback<T>? = null,
+    private val onClick: OnBaseAdapterClickListener<T>? = null,
+    private val filesService: FilesService
+) :
     RecyclerView.Adapter<ImageAdapter<T>.ViewHolder>() {
 
-    constructor(@LayoutRes layout: Int, onClick: OnBaseAdapterClickListener<T>? = null, filesRepository: FilesRepository) : this(layout, null, onClick, filesRepository)
+    constructor(@LayoutRes layout: Int, onClick: OnBaseAdapterClickListener<T>? = null, filesService: FilesService) : this(layout, null, onClick, filesService)
 
     var items: List<T> = listOf()
         set(value) {
@@ -41,7 +46,7 @@ class ImageAdapter<T>(@LayoutRes val layout: Int, private val diff: DiffCallback
     inner class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun setImageFromFile(item: T?) {
             if (item != null && item is File) {
-                val pic = filesRepository.getPicture(item)
+                val pic = filesService.getPicture(item)
                 Glide.with(itemView.context)
                     .load(pic)
                     .apply(

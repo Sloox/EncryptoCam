@@ -1,19 +1,16 @@
 package com.example.encryptocam.screens.gallery
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.encryptocam.commons.base.viewmodel.BaseFragmentViewModel
-import com.example.encryptocam.domain.files.FilesRepository
+import com.example.encryptocam.domain.files.FilesService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.koin.core.inject
 import java.io.File
 
-class GalleryViewModel : BaseFragmentViewModel() {
-
-    private val context: Context by inject()
-    private val fileRepository: FilesRepository by inject()
+class GalleryViewModel(private val context: Context, private val fileService: FilesService) : BaseFragmentViewModel() {
     private val _galleryPictures: MutableLiveData<List<File>> = MutableLiveData()
     val galleryPictures: LiveData<List<File>> = _galleryPictures
 
@@ -24,9 +21,10 @@ class GalleryViewModel : BaseFragmentViewModel() {
         }
     }
 
-    private fun loadPictures() {
-        val rootDir = fileRepository.getRootDirectory(context)
-        val fileList = fileRepository.listFiles(rootDir)
+    @VisibleForTesting
+    fun loadPictures() {
+        val rootDir = fileService.getRootDirectory(context)
+        val fileList = fileService.listFiles(rootDir)
         _galleryPictures.postValue(fileList)
     }
 
