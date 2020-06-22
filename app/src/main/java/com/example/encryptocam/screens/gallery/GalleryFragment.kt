@@ -1,5 +1,6 @@
 package com.example.encryptocam.screens.gallery
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -32,12 +33,13 @@ class GalleryFragment : BaseFragment<GalleryViewModel, FragmentGalleryBinding>(R
         showToolbar()
     }
 
+    @SuppressLint("RestrictedApi")
     private fun showToolbar() {
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             show()
             setHomeButtonEnabled(true)
             setDisplayHomeAsUpEnabled(true)
-            setDefaultDisplayHomeAsUpEnabled(true)
+            setDefaultDisplayHomeAsUpEnabled(true) //some phone models require this to be enabled
         }
         setHasOptionsMenu(true)
     }

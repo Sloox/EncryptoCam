@@ -12,6 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * This will send only one update no matter what occurs.
+ * This is used to bypass a possible incoming config change and the event re-firing unnecessarily
+ * This would cause the navigation to occur multiple times.
+ * Its left in Java as Kotlin has some compatibility issues
+ */
 public class SingleLiveDataEvent<T> extends MutableLiveData<T> {
 
     private static final String TAG = "SingleLiveEvent";

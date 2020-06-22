@@ -4,8 +4,8 @@ import android.content.Context
 import java.io.File
 
 interface FilesService {
-    val ENCRYPTED_EXTENSION: String
-    val FILENAME_FORMAT: String
+    val encryptionExtenstion: String
+    val fileFormat: String
 
 
     fun getRootDirectory(context: Context): File

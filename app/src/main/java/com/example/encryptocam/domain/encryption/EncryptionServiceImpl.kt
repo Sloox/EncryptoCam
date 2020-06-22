@@ -8,13 +8,17 @@ import javax.crypto.CipherOutputStream
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
-
+/**
+ * Encryption implementation that makes use of MD5 to create a 128bit key to use a standard AES implementation
+ * provided by the basic java classes. It is important to take note that NOT_A_PASSWORD contained within the companion object is not an ideal implementation
+ * of a private key. Please @see NOT_A_PASSWORD for more details regarding this
+ * */
 class EncryptionServiceImpl : EncryptionService {
-    override val ENCRYPT_ALGO: String = "AES"
+    override val encryptionAlgorithm: String = "AES"
     private val key: SecretKey
 
     init {
-        key = SecretKeySpec(getEncryptionKey(), ENCRYPT_ALGO) //MD5 as 128bit key works wonders
+        key = SecretKeySpec(getEncryptionKey(), encryptionAlgorithm) //MD5 creates a 128bit key
     }
 
     override fun getEncryptionKey(): ByteArray {
@@ -34,7 +38,7 @@ class EncryptionServiceImpl : EncryptionService {
 
     override fun encryptBytes(bytes: ByteArray): ByteArray {
         if (bytes.isEmpty()) return byteArrayOf()
-        val aes = Cipher.getInstance(ENCRYPT_ALGO)
+        val aes = Cipher.getInstance(encryptionAlgorithm)
         aes.init(Cipher.ENCRYPT_MODE, key)
         val outputStream = ByteArrayOutputStream(bytes.size)
         val cipherOut = CipherOutputStream(outputStream, aes)
@@ -46,7 +50,7 @@ class EncryptionServiceImpl : EncryptionService {
 
     override fun decryptBytes(bytes: ByteArray): ByteArray {
         if (bytes.isEmpty()) return byteArrayOf()
-        val aes = Cipher.getInstance(ENCRYPT_ALGO)
+        val aes = Cipher.getInstance(encryptionAlgorithm)
         aes.init(Cipher.DECRYPT_MODE, key)
         val outputStream = ByteArrayOutputStream(bytes.size)
         val cipherOut = CipherOutputStream(outputStream, aes)

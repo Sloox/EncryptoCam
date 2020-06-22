@@ -66,7 +66,7 @@ class FilesServiceTest {
         val file = filesService.getRootDirectory(context)
         val newFile = filesService.createFileNew(file)
         Assert.assertNotNull(newFile)
-        assert(newFile.name.contains(filesService.ENCRYPTED_EXTENSION))
+        assert(newFile.name.contains(filesService.encryptionExtenstion))
         assert(newFile.path.contains(file.path))
     }
 

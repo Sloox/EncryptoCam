@@ -1,5 +1,6 @@
 package com.example.encryptocam.screens.login
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -14,12 +15,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layout.fragment_login, LoginViewModel::class) {
+    @SuppressLint("RestrictedApi")
     private fun showToolbar() {
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             show()
             setHomeButtonEnabled(false)
             setDisplayHomeAsUpEnabled(false)
-            setDefaultDisplayHomeAsUpEnabled(false)
+            setDefaultDisplayHomeAsUpEnabled(false) //some phone models require this
         }
     }
 

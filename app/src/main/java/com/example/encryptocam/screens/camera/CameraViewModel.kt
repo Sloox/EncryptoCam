@@ -58,7 +58,7 @@ class CameraViewModel(private val context: Context, private val filesService: Fi
         _frontFacingCameraSelection.postValue(_frontFacingCameraSelection.value?.not() ?: false)
     }
 
-    /**we use suspend here to ensure its run within coroutine scope*/
+    /*we use suspend here to ensure its run within coroutine scope*/
     suspend fun encryptAndSaveImage(bufferedOutputStream: ByteArrayOutputStream) {
         clearCameraState()
         val root = filesService.getRootDirectory(context)

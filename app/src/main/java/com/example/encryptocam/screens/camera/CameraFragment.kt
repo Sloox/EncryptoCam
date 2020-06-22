@@ -29,6 +29,13 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+/**
+ * CameraX is used within this CameraFragment implementation.
+ * CameraX is a relatively new jetpack library that abstracts as much as possible the camera2 implementation of android away from the developer.
+ * If there is interest in camera2 implementations i have worked with please the following two github libraries
+ * KamUtils:https://github.com/Sloox/KamUtils
+ * Kamscii:https://github.com/Sloox/Camscii
+ * */
 class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.layout.fragment_camera, CameraViewModel::class) {
     private lateinit var viewFinder: PreviewView
     private var displayId: Int = -1

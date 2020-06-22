@@ -8,9 +8,13 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * File Service implementation, the encrypted files are stored within the external media directory of the application
+ * It will be store an encrypted jpg file with the file name jpc
+ * */
 class FilesServiceImpl(private val encryptionService: EncryptionService) : FilesService {
-    override val ENCRYPTED_EXTENSION: String = ".jpc"
-    override val FILENAME_FORMAT: String = "yyyy-MM-dd-HH-mm-ss-SSS"
+    override val encryptionExtenstion: String = ".jpc"
+    override val fileFormat: String = "yyyy-MM-dd-HH-mm-ss-SSS"
 
     override fun getRootDirectory(context: Context): File {
         val appContext = context.applicationContext
@@ -19,10 +23,10 @@ class FilesServiceImpl(private val encryptionService: EncryptionService) : Files
     }
 
     override fun createFileNew(rootFolder: File): File =
-        File(rootFolder, SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis()) + ENCRYPTED_EXTENSION)
+        File(rootFolder, SimpleDateFormat(fileFormat, Locale.US).format(System.currentTimeMillis()) + encryptionExtenstion)
 
     override fun listFiles(rootFolder: File): List<File> {
-        return rootFolder.listFiles { _, name -> name.toLowerCase().endsWith(ENCRYPTED_EXTENSION) }?.asList() ?: arrayListOf()
+        return rootFolder.listFiles { _, name -> name.toLowerCase().endsWith(encryptionExtenstion) }?.asList() ?: arrayListOf()
     }
 
     override fun savePicture(file: File, bytes: ByteArray) {
