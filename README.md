@@ -6,3 +6,5 @@ It has the following features:
 - Uses camerax
 - uses KOIN for dependancy injection
 - Tests are included for the viewmodesl & services.
+- All pictures are encrypted via AES and are saved in the format of jpc.
+- The application automatically decrypts the files when showing it in a recyclerview.
