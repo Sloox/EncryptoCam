@@ -15,6 +15,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layout.fragment_login, LoginViewModel::class) {
+
+    override fun onAttachInject() = presentationComponent.inject(this)
+
     @SuppressLint("RestrictedApi")
     private fun showToolbar() {
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
