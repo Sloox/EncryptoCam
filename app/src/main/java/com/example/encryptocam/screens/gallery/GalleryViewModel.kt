@@ -9,8 +9,9 @@ import com.example.encryptocam.domain.files.FilesService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class GalleryViewModel(private val context: Context, private val fileService: FilesService) : BaseFragmentViewModel() {
+class GalleryViewModel @Inject constructor(private val context: Context, private val fileService: FilesService) : BaseFragmentViewModel() {
     private val _galleryPictures: MutableLiveData<List<File>> = MutableLiveData()
     val galleryPictures: LiveData<List<File>> = _galleryPictures
 

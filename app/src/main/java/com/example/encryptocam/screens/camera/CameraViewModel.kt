@@ -7,15 +7,16 @@ import com.example.encryptocam.commons.base.viewmodel.BaseFragmentViewModel
 import com.example.encryptocam.domain.files.FilesService
 import com.example.encryptocam.navigation.NavCommand
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
-class CameraViewModel(private val context: Context, private val filesService: FilesService) : BaseFragmentViewModel() {
-    private val _flashStateEnabled = MutableLiveData<Boolean>(false)
+class CameraViewModel @Inject constructor(val context: Context, private val filesService: FilesService) : BaseFragmentViewModel() {
+    private val _flashStateEnabled = MutableLiveData(false)
     val flashStateEnabled: LiveData<Boolean> = _flashStateEnabled
 
-    private val _frontFacingCameraSelection = MutableLiveData<Boolean>(false)
+    private val _frontFacingCameraSelection = MutableLiveData(false)
     val frontFacingCameraSelection: LiveData<Boolean> = _frontFacingCameraSelection
 
-    private val _aemEnabled = MutableLiveData<Boolean>(false)
+    private val _aemEnabled = MutableLiveData(false)
     val aemEnabled: LiveData<Boolean> = _aemEnabled
 
     private val _camCommandState: MutableLiveData<CameraState> = MutableLiveData(CameraState.Default)

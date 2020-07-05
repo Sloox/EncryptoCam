@@ -63,10 +63,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$androidx_navigation"
 
     //DI
-    implementation "org.koin:koin-android:$koin"
-    implementation "org.koin:koin-android-ext:$koin"
-    implementation "org.koin:koin-androidx-viewmodel:$koin"
-    implementation "org.koin:koin-androidx-fragment:$koin"
+    implementation "com.google.dagger:dagger:$dagger"
+    kapt "com.google.dagger:dagger-compiler:$dagger"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide"

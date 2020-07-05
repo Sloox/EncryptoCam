@@ -12,12 +12,24 @@ import com.example.encryptocam.commons.base.adapters.ImageAdapter
 import com.example.encryptocam.commons.base.adapters.ImageAdapter.OnBaseAdapterClickListener
 import com.example.encryptocam.commons.base.fragment.BaseFragment
 import com.example.encryptocam.databinding.FragmentGalleryBinding
+import com.example.encryptocam.domain.files.FilesService
 import com.example.encryptocam.navigation.NavCommand
-import org.koin.android.ext.android.get
 import java.io.File
+import javax.inject.Inject
 
 class GalleryFragment : BaseFragment<GalleryViewModel, FragmentGalleryBinding>(R.layout.fragment_gallery, GalleryViewModel::class) {
-    private val adapter: ImageAdapter<File> = ImageAdapter(R.layout.adapter_item_picture, OnBaseAdapterClickListener { viewModel.onPictureClicked(it) }, get())
+    @Inject
+    lateinit var fileServices: FilesService
+
+    override fun onAttachInject() = presentationComponent.inject(this)
+
+    private val adapter: ImageAdapter<File> by lazy {
+        ImageAdapter<File>(
+            R.layout.adapter_item_picture,
+            OnBaseAdapterClickListener { viewModel.onPictureClicked(it) },
+            fileServices
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

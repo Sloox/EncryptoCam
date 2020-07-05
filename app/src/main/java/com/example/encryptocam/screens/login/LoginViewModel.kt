@@ -7,23 +7,24 @@ import com.example.encryptocam.domain.login.LoginService
 import com.example.encryptocam.domain.login.LoginStateEnum
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(private val loginRepo: LoginService) : BaseFragmentViewModel() {
+class LoginViewModel @Inject constructor(private val loginService: LoginService) : BaseFragmentViewModel() {
     val loginPassword = MutableLiveData<String>()
-    val loginState: LiveData<LoginStateEnum> = loginRepo.loginState
+    val loginState: LiveData<LoginStateEnum> = loginService.loginState
 
     fun attemptLogin(loginPassword: String?) = GlobalScope.launch {
         if (checkLoginTextIntegrity(loginPassword)) {
-            loginRepo.doLogin(loginPassword!!)
+            loginService.doLogin(loginPassword!!)
         }
     }
 
     suspend fun checkLoginTextIntegrity(loginPassword: String?): Boolean {
-        return loginRepo.verifyPasswordIntegrity(loginPassword)
+        return loginService.verifyPasswordIntegrity(loginPassword)
     }
 
     fun clearLoginState() = GlobalScope.launch {
-        loginRepo.doLogin("")
+        loginService.doLogin("")
     }
 
 }

@@ -198,4 +198,5 @@ class CameraFragment : BaseFragment<CameraViewModel, FragmentCameraBinding>(R.la
 
     private fun hideSystemUI() = (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
+    override fun onAttachInject() = presentationComponent.inject(this)
 }
